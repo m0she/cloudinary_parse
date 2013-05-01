@@ -2,17 +2,15 @@ _ = require('cloud/lib/underscore')
 sha1 = require('cloud/lib/crypto/sha1')
 config = require('cloud/cloudinary_config.js').config
 
-exports.sign = (params) ->
+exports.sign_upload = (params) ->
   params = build_upload_params(params)
   params.signature = api_sign_request(params, config().api_secret)
   params.api_key = config().api_key
 
-  api_url = get_api_url("upload", params)
-
   for k, v of params when not present(v)
     delete params[k]
 
-  return fields: params, form_attrs: {action: api_url, method: "POST", enctype: "multipart/form-data"}
+  return params
 
 get_api_url = (action = 'upload', options = {}) ->
   cloudinary = options["upload_prefix"] ? config().upload_prefix ? "https://api.cloudinary.com"
@@ -29,21 +27,21 @@ build_eager = (transformations) ->
     transformation = _.clone(transformation)
     _.filter([generate_transformation_string(transformation), transformation.format], present).join("/")
   ).join("|")
-    
+
 build_custom_headers = (headers) ->
   if !headers?
     return undefined
-  else if _.isArray(headers) 
+  else if _.isArray(headers)
     ;
   else if _.isObject(headers)
-    headers = [k + ": " + v for k, v of headers]    
+    headers = [k + ": " + v for k, v of headers]
   else
     return headers
   return headers.join("\n")
 
 build_upload_params = (options) ->
   options ?= {}
-  params = 
+  params =
     timestamp: timestamp(),
     transformation: generate_transformation_string(options),
     public_id: options.public_id,
@@ -57,14 +55,14 @@ build_upload_params = (options) ->
     type: options.type,
     eager: build_eager(options.eager),
     headers: build_custom_headers(options.headers),
-    use_filename: options.use_filename, 
+    use_filename: options.use_filename,
     notification_url: options.notification_url,
     eager_notification_url: options.eager_notification_url,
     eager_async: options.eager_async,
     invalidate: options.invalidate,
     tags: options.tags && build_array(options.tags).join(",")
   params
- 
+
 timestamp = ->
   Math.floor(new Date().getTime()/1000)
 
@@ -78,8 +76,8 @@ build_array = (arg) ->
   if !arg?
     []
   else if _.isArray(arg)
-    arg 
-  else 
+    arg
+  else
     [arg]
 
 exports.present = present = (value) ->
@@ -110,9 +108,9 @@ generate_transformation_string = (options) ->
   named_transformation = []
   if _.filter(base_transformations, _.isObject).length > 0
     base_transformations = _.map(base_transformations, (base_transformation) ->
-      if _.isObject(base_transformation) 
-        generate_transformation_string(_.clone(base_transformation)) 
-      else 
+      if _.isObject(base_transformation)
+        generate_transformation_string(_.clone(base_transformation))
+      else
         generate_transformation_string(transformation: base_transformation)
     )
   else
