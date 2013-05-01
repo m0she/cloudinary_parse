@@ -2,33 +2,32 @@
 (function() {
   var api_sign_request, build_array, build_custom_headers, build_eager, build_upload_params, config, generate_transformation_string, get_api_url, option_consume, present, sha1, timestamp, _;
 
-  _ = require('cloud/lib/underscore');
+  _ = require('cloud/cloudinary/lib/underscore');
 
-  sha1 = require('cloud/lib/crypto/sha1');
+  sha1 = require('cloud/cloudinary/lib/crypto/sha1');
 
-  config = require('cloud/cloudinary_config.js').config;
+  config = require('cloud/cloudinary/config.js');
 
-  exports.sign = function(params) {
-    var api_url, k, v;
+  exports.sign_upload_request = function(params) {
+    var api_secret, k, v;
 
     params = build_upload_params(params);
-    params.signature = api_sign_request(params, config().api_secret);
+    api_secret = config().api_secret;
+    if (api_secret == null) {
+      throw "Must supply api_secret";
+    }
+    params.signature = api_sign_request(params);
     params.api_key = config().api_key;
-    api_url = get_api_url("upload", params);
+    if (params.api_key == null) {
+      throw "Must supply api_key";
+    }
     for (k in params) {
       v = params[k];
       if (!present(v)) {
         delete params[k];
       }
     }
-    return {
-      hidden_fields: params,
-      form_attrs: {
-        action: api_url,
-        method: "POST",
-        enctype: "multipart/form-data"
-      }
-    };
+    return params;
   };
 
   get_api_url = function(action, options) {

@@ -1,11 +1,16 @@
-_ = require('cloud/lib/underscore')
-sha1 = require('cloud/lib/crypto/sha1')
-config = require('cloud/cloudinary_config.js').config
+_ = require('cloud/cloudinary/lib/underscore')
+sha1 = require('cloud/cloudinary/lib/crypto/sha1')
+config = require('cloud/cloudinary/config.js')
 
-exports.sign_upload = (params) ->
+exports.sign_upload_request = (params) ->
   params = build_upload_params(params)
-  params.signature = api_sign_request(params, config().api_secret)
+  api_secret = config().api_secret
+  if !api_secret?
+    throw "Must supply api_secret"
+  params.signature = api_sign_request(params, )
   params.api_key = config().api_key
+  if !params.api_key?
+    throw "Must supply api_key"
 
   for k, v of params when not present(v)
     delete params[k]
