@@ -73,17 +73,10 @@ Resposne:
 
     {
       "result": {
-        "fields": {
-          "timestamp":1366555048,
-          "tags":"MY_USER",
-          "signature":"CLOUDINARY_SIGNATURE",
-          "api_key":"CLOUDINARY_API_KEY"
-        },
-        "form_attrs": {
-          "action":"https://api.cloudinary.com/v1_1/MY_CLOUD_NAME/image/upload",
-          "method":"POST",
-          "enctype":"multipart/form-data"
-        }
+        "timestamp":1366555048,
+        "tags":"MY_USER",
+        "signature":"CLOUDINARY_SIGNATURE",
+        "api_key":"CLOUDINARY_API_KEY"
       }
     }
 
@@ -116,3 +109,18 @@ Response:
       "url":"http://res.cloudinary.com/my_cloud_name/image/upload/v1366555348/k3vmeifbepxddbzjuop9.jpg",
       "secure_url":"https://cloudinary-a.akamaihd.net/my_cloud_name/image/upload/v1366555348/k3vmeifbepxddbzjuop9.jpg"
     }
+
+# Support
+
+You can [open an issue through GitHub](https://github.com/cloudinary/cloudinary_parse/issues).
+
+Contact us at [info@cloudinary.com](mailto:info@cloudinary.com)
+
+Or via Twitter: [@cloudinary](https://twitter.com/#!/cloudinary)
+
+# License
+Released under the MIT license.
+
+* [underscore.js](http://underscorejs.org/) is also released under the MIT license.
+* [crypto-js](https://code.google.com/p/crypto-js/) is released under the New BSD license.
+
